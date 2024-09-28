@@ -1,5 +1,5 @@
 ---
-title: "Introduction to R and RStudio"
+title: "Introduction to R and RStudio Completed"
 author: Nicole Black, Kayla Xu
 date: 07/13/22
 updated: 01/22/24
@@ -46,7 +46,7 @@ setwd() # (ex: "/Users/nicoleblack/Desktop/qbio_490_nicole/week3_R")
 
 ```{r setup Exercise 2.3}
     # replace path with the path to your qbio_490_name directory
-    knitr::opts_knit$set(root.dir = normalizePath("/PATH/TO/DIRECTORY")) 
+    knitr::opts_knit$set(root.dir = normalizePath("/mnt/c/Users/roban/QBIO/qbio_490_RobertLogan")) 
 ```
 
   Now that your environment is set up, let's get into coding!
@@ -61,7 +61,7 @@ var_num <- 23
 var_vector <- c(3, 2, 1)
 
 ## Create a new variable my_var to store anything you choose:
-
+my_var <- c(1,2,3)
 
 print(my_var)
 ```
@@ -79,26 +79,26 @@ na <- NA
 
 # Boolean Value is either true or false
 ## booleans can be defined in a variety of ways in R!
-true_var <- 
-false_var <- 
+true_var <- TRUE
+false_var <- FALSE
 
 ## numeric is a catch all for any number value in R
-negative <- 
-decimal <- 
+negative <- -1
+decimal <- 0.1
 
 ## a string is any text value
 ## strings can be enclosed in single or double quote
-string_var <- 
-char_var <- 
+string_var <- 'taco'
+char_var <- 'cat'
 
 ## vectors contain data elements of the same data type
 ## they are declared by enclosing elements in c()
-vector <- c() 
+vector <- c('need','a','taco') 
 
 ## a factor is a categorical variable
 ## a factor has data elements (defined like a vector) and categories (known also as levels), that are inferred from the data 
 factor <- factor(vector) 
-factor
+factor <- factor(levels)
 ```
 
   A note on variable naming:
@@ -125,6 +125,15 @@ SUMOFAGES <- sum(numeric_vector)
 
 ```{r Exercise 3.4}
 ## add code here!
+age <- 18
+typeof(age)
+name <- 'Robert'
+typeof(name)
+birthday <- 09/10/2006
+typeof(birthday)
+three_fav_colors <- c('black','blue','sage green')
+typeof(three_fav_colors)
+
 ```
 
 ###### (4) Functions
@@ -154,7 +163,10 @@ max_value
 
 ```{r Exercise 4.2}
 list_of_numbers <- c(1, 1, 2, 3, 5, 8, 13, 21)
-
+sum(list_of_numbers)
+min(list_of_numbers)
+mean(list_of_numbers)
+mode(list_of_numbers)
 ## call functions here
 
 
@@ -196,13 +208,13 @@ list_of_numbers <- c(1, 1, 2, 3, 5, 8, 13, 21)
   The syntax for "if", "else if", and "else" statements is as follows. Fill in possible conditions and actions so that the "if" statement is skipped, and the "else if" runs, printing out "Success!". Run the block to test.
 
 ```{r Exercise 5.3}
-
-if (# condition) {
-  # action
-} else if (# condition) {
-  # action
+x <- 5
+if (x<3) {
+  print("False")
+} else if (x == 5) {
+  print("Success!")
 } else {
-  # action
+  print(x)
 }
 ```
 
@@ -250,9 +262,12 @@ if (7.5 %in% new_list) {
   While loops are like if statements that repeat multiple times until the condition is no longer true. The syntax is as follows:
 
 ```{r Exercise 6.1 - syntax of a while loop}
-while (# condition) {
-  # do something
-  # update condition
+x <- 1
+
+while (x < 5) {
+  print(x)
+  print("is less than 5")
+  x <- x + 1
 }
 ```
 
@@ -272,9 +287,8 @@ while (i < 10) {
 x = 0
 my_list <- c(1, 10, x)
 mean <- mean(my_list)
-while (# condition) {
-  # do something
-  # update condition
+while (mean < 10) {
+  x <- x+1
 }
 ```
 
@@ -300,7 +314,9 @@ for (element in list) { # note that I can call "element" whatever I want, it lik
 
 ```{r Exercise 6.6}
 list <- c(1, 5, 20, 0)
-
+for(element in list){
+  print(element)
+}
 # write loop here
 ```
 
@@ -315,7 +331,10 @@ for (i in 1:10) {
   Use this syntax to print all numbers between -7 and 7.
 
 ```{r Exercise 6.8}
-# write loop here
+for (i in -7:7){
+  print(i)
+}
+
 
 ```
 
@@ -421,6 +440,7 @@ library(package) # you need to load in a package in every file that uses it (it'
 
 ```{r}
 # write code here
+help(is.na)
 ```
 
 ###### (12) Further Practice
