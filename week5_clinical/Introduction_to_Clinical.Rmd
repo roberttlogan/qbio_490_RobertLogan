@@ -1,5 +1,5 @@
 ---
-title: "Intro to TCGA Clinical Data"
+title: "Intro to TCGA Clinical Data Completed"
 date: 07/17/22
 updated: 09/26/24
 ---
@@ -15,7 +15,7 @@ As good general practice to keep things organized, set the "analysis_data" folde
 Set your working directory below:
 
 ```{r setup}
-    knitr::opts_knit$set(root.dir = normalizePath("/PATH/TO/analysis_data")) 
+    knitr::opts_knit$set(root.dir = normalizePath("/home1/ralogan/490_cluster")) 
 ```
 
 Before you move on, go to your GitHub web browser, open your .gitignore, and make sure the following files are listed. 
@@ -63,6 +63,7 @@ We can view a singular column with the notation: df_name$row_name
 Use this syntax to view the mpg column of the mtcars data frame.
 
 ```{r Exercise 1.4}
+mtcars$mpg
 # add code here
 
 ```
@@ -70,9 +71,11 @@ Use this syntax to view the mpg column of the mtcars data frame.
 What if we want to view a column, but don't know it's exact name? We can get all column names (or all row names) by using the functions colnames() and rownames(). Call those below, then view the carburetor column using dollar sign notation.
 
 ```{r Exercise 1.5}
-# call functions here
 
-mtcars$ # fill in name of carburetor column here
+# call functions here
+colnames(mtcars)
+rownames(mtcars)
+mtcars$carb # fill in name of carburetor column here
 ```
 
 We can also view particular subsets of the data frame by using the df[row, column] notation.
@@ -98,6 +101,9 @@ Select the horse power data for the Duster 360, Lincoln Continental, and Maserat
 
 ```{r Exercise 1.7}
 # write code here
+colnames(mtcars)
+rownames(mtcars)
+mtcars[c(7,16,31),4]
 ```
 
 
@@ -117,6 +123,7 @@ You can use an ifelse statement to assign your values! Remember, ifelse() takes 
 
 ```{r Exercise 1.9}
 # write code here
+mtcars$transmission <- ifelse(mtcars$am == 0, "automatic","manual")
 
 
 ```
@@ -134,13 +141,15 @@ df_copy <- df[rows_to_keep, columns_to_keep]
 Use the above syntax to save a copy of the mtcars data without the "am" column. Remember to use colnames() to find the column number of "am". Also recall that to select row/columns to drop (hence selecting everything else), you can use "-index #".
 
 ```{r Exercise 1.11}
-# write code here
+colnames(mtcars)
+mtcars2 <- mtcars[,c(1:8,10:12)]
+colnames(mtcars2)
 ```
 
 View your new mtcars copy data frame to check that the "am" column was dropped.
 
 ```{r Exercise 1.12}
-# write code here
+colnames(mtcars2)
 ```
 
 
@@ -151,9 +160,11 @@ Now that you've worked with a simpler example dataset, it is time to work with T
 Hint: The code you use here is the same as the code when you initially queried, downloaded, and retrieved the TCGA clinical data.
 
 ```{r}
-clin_query <- #Fill in correct command
+clin_query <- GDCquery(project = "TCGA-BRCA", data.category = "Clinical",
+data.type = "Clinical Supplement", data.format = 'BCR Biotab')
   
-clinic <- #Fill in correct command
+
+clinic <- clinical.BCRtab.all$clinical_patient_brca[-c(1,2),]
 
 colnames(clinic)[ colnames(clinic) == "bcr_patient_barcode" ] <- "Tumor_Sample_Barcode"
 ```
@@ -161,13 +172,13 @@ colnames(clinic)[ colnames(clinic) == "bcr_patient_barcode" ] <- "Tumor_Sample_B
 Querying TCGA data can take a while, even without downloading. A faster way to save and access the clinical data is to save the dataframe as a csv file on your local computer. Use the following command to do so:
 
 ```{r}
-write.csv(clinic, "/PATH/TO/analysis_data/brca_clinical_data.csv", row.names=FALSE)
+write.csv(clinic, "/home1/ralogan/490_cluster/analysis_data/brca_clinical_data.csv", row.names=FALSE)
 ```
 
 To read the csv back into your environment as a dataframe:
 
 ```{r}
-clinic <- read.csv("/PATH/TO/analysis_data/brca_clinical_data.csv")
+clinic <- read.csv("/home1/ralogan/490_cluster/analysis_data/brca_clinical_data.csv")
 ```
 
 
@@ -175,25 +186,30 @@ clinic <- read.csv("/PATH/TO/analysis_data/brca_clinical_data.csv")
 
 View the structure of the data as well as the first few lines. What two commands should you use?
 Answer the following questions based on the output of those commands: 
-# 1. How many rows are there? How many columns?
-# 2. What is the data type of $gender?
-# 3. What is the age in years of the 5th patient (barcode: TCGA-4H-AAAK)?
-# 4. How old was the 1st patient at their last follow up (barcode: TCGA-3C-AAAU)? HINT: you need to look at data from two columns to answer this
+# 1. How many rows are there? How many columns? A: 1000 rows, 112 columns
+# 2. What is the data type of $gender?A: Str
+# 3. What is the age in years of the 5th patient (barcode: TCGA-4H-AAAK)? A: 50
+# 4. How old was the 1st patient at their last follow up (barcode: TCGA-3C-AAAU)? HINT: you need to look at data from two columns to answer this A: 45
 
 ```{r Exercise 3.1}
-# write code here
+colnames(clinic) #112 columns
+rownames(clinic) #1,000 rows
 ```
 
 View the column and row names. What two commands should you use?
 
 ```{r Exercise 3.2}
-# write code here
+clinical$gender
+
 ```
 
 View the vital status column. What two notations can be used to view columns? 
 
 ```{r Exercise 3.3}
-# write code here
+#clinical$vital_status 
+#or
+clinical[,"vital_status"]
+
 ```
 
 ###### (4) Plotting
@@ -206,6 +222,7 @@ For an extra challenge, add a plot title, axes titles, and colors to your plot.
 
 ```{r Exercise 4.1}
 # create plot here
+plot(clinic$last_contact_days_to,clinic$lymph_nodes_examined_count, main = "Correlation betwen last days Contact and Lymph Nodes Examined")
 ```
 
 Choose two new variables and make a box plot (use the boxplot() function).
@@ -216,6 +233,7 @@ For an extra challenge, add a plot title, axes titles, and confidence intervals 
 
 ```{r Exercise 4.2}
 # create plot here
+boxplot(clinical$birth_days_to)
 ```
 
 
@@ -227,23 +245,23 @@ A significant portion of your coding work will be data cleaning and preparation 
 
 1) Create a mask to remove all NA values from vital_status
 ```{r}
-vital_status_na_mask <- 
+vital_status_na_mask <-!is.na(clinical$vital_status)
 ```
 
 2) Create a mask to select for male patients
 ```{r}
-male_mask <-
+male_mask <- clinical$gender == "male"
 ```
 
 3) Create a mask to select for patients under the age of 35 OR over 60 at diagnosis. 
 ```{r}
-under30_over60_mask <-
+under30_over60_mask <- clinical$age_at_diagnosis <35 | clinical$age_at_diagnosis > 60
 ```
 
 4) Using your under30_over60_mask, create a new dataframe called no_middle_clinic which contains all the clinical data for patients under the age of 30 or over 60 at diagnosis
 
 ```{r}
-no_middle_clinic <- 
+no_middle_clinic <- under30_over60_mask
 ```
 
 
@@ -283,8 +301,8 @@ For this example, let's create a KM plot to look at the relationship between bre
 First, check if there are any NA values in age_at_diagnosis (Hint: use the is.na() function. If you don't remember how the function works, run ?is.na() in the console). Use Boolean indexing to remove the NA values.
 
 ```{r}
-age_NA_mask <- 
-cleaned_clinic <- 
+age_NA_mask <- is.na(clinical$age_at_diagnosis)
+cleaned_clinic <- age_NA_mask
 ```
 
 Create a new column called "age_category" in cleaned_clinic that contains the value "Young" if age_at_diagnosis is <=35, "Middle" if >35 and < 50, and "Old" if >=50. (Hint: use ifelse())
@@ -292,13 +310,13 @@ Create a new column called "age_category" in cleaned_clinic that contains the va
 Note: These age threshold are relatively arbitrary, and just the ages that we are using in this example. 
 
 ```{r}
-cleaned_clinic$age_category <- 
+cleaned_clinic$age_category <- ifelse(clinical$age_at_diagnosis < 30, "Young",ifelse(clinical$age_at_diagnosis > 50,"Old","Middle"))
 ```
 
 KM Plots also requires a column for total number of days survived post diagnosis. However, TCGA records survival over time two ways: last_contact_days_to for patients who are still alive, and death_days_to for patients who passed away. If a patient is still alive, their value in the death_days_to column is the string "[Not Applicable]". Therefore, we need to create a new column called survival_time that combines the information in these two columns so there are no NA values.
 
 ```{r}
-cleaned_clinic$survival_time <- 
+cleaned_clinic$survival_time <- ifelse(clinical$death_days_to == "[Not Applicable]",clinical$last_contact_days_to,clinical$death_days_to)
 ```
 
 If we check the data, we see that the values in survival_time are strings from the "" around each number. We need to convert the values to numeric in order to use them in the KM plot.
@@ -309,7 +327,7 @@ cleaned_clinic$survival_time <- as.numeric(cleaned_clinic$survival_time)
 
 Finally, we need to make a death event column that contains T if a patient has died, and F if the patient is alive. (Hint: cleaned_clinic$vital_status has "Alive" if a patient is alive and "Dead" if a patient passed.)
 ```{r}
-cleaned_clinic$death_event <- 
+cleaned_clinic$death_event <- ifelse(clinical$vital_status == "Alive",T,F) 
 ```
 
 # 2. Create Survminer Objects
@@ -342,16 +360,17 @@ KM_plot
 
 Answer the following questions:
 # 1. What does the y axis represent?
-
+The Y axis represents the survival probability
 # 2. What does the x axis represent?
-
+The x axis represents time in days
 # 3. What age group appears to have the greatest rate of survival?
-
+Middle aged people appear to have the greatest rate of survival over time
 # 4. What age group appears to have the worst rate of survival? 
-
+As time goes on, young people appear to have the worst rate of survival
 # 5. What is the approx. 15-year survival rate for "Old" breast cancer patients?
-
+It appears to be around 0.02
 # 6. What is the p-value? Is it statistically significant and what does that tell us about the relationship between age and breast cancer survival? 
+The p value is 0.011 and since it is < 0.05 the data is statistically significant. The data tells us the longer a patient has cancer, the lower their survival rate is. By comparing each of the different stratas we can see that middle aged people have the best survival rates over time.
 
 
 
